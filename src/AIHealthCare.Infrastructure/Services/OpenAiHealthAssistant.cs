@@ -58,7 +58,7 @@ Avoid requesting unnecessary personal identifiers.
                     model,
                     [ResponseItem.CreateUserMessageItem(prompt)],
                     cancellationToken: cancellationToken);
-                answer = response.GetOutputText();
+                answer = response.Value.GetOutputText();
             }
 
             success = true;
@@ -122,7 +122,7 @@ Use sections: Known information, Recent records, Current medications, Questions 
                     [ResponseItem.CreateUserMessageItem(prompt)],
                     cancellationToken: cancellationToken);
             success = true;
-            return response.GetOutputText();
+            return response.Value.GetOutputText();
         }
         finally
         {
