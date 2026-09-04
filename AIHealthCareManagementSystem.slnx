@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AIHealthCare.Api/AIHealthCare.Api.csproj" />
+    <Project Path="src/AIHealthCare.Domain/AIHealthCare.Domain.csproj" />
+    <Project Path="src/AIHealthCare.Infrastructure/AIHealthCare.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AIHealthCare.Api.Tests/AIHealthCare.Api.Tests.csproj" />
+  </Folder>
+</Solution>
