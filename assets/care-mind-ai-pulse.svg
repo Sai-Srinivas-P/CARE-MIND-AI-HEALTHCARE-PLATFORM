@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="330" viewBox="0 0 1100 330">
+<rect width="1100" height="330" rx="24" fill="#08151a"/>
+<text x="40" y="45" fill="#f3fffd" font-family="Arial" font-size="24" font-weight="700">AI ASSISTANT · GUARDED REQUEST PATH</text>
+<text x="40" y="72" fill="#9eb9be" font-family="Arial" font-size="13">The implementation separates user questions, OpenAI Responses API calls, and audit logging.</text>
+<g font-family="Arial">
+<g transform="translate(45 120)"><rect width="220" height="110" rx="18" fill="#0c2027" stroke="#63f5cf" stroke-width="2"/><text x="24" y="38" fill="#63f5cf" font-size="15" font-weight="700">1 · ASK</text><text x="24" y="66" fill="#edfdf9" font-size="16">POST /api/ai/ask</text><text x="24" y="91" fill="#9db8be" font-size="12">JWT required</text></g>
+<path d="M265 175H330" stroke="#355b64" stroke-width="5"/><polygon points="330,175 317,167 317,183" fill="#63d7ff"/>
+<g transform="translate(330 120)"><rect width="220" height="110" rx="18" fill="#0e1d30" stroke="#63d7ff" stroke-width="2"/><text x="24" y="38" fill="#63d7ff" font-size="15" font-weight="700">2 · GUARD</text><text x="24" y="66" fill="#edf7ff" font-size="16">Safety system prompt</text><text x="24" y="91" fill="#a4b8ca" font-size="12">non-diagnostic boundary</text></g>
+<path d="M550 175H615" stroke="#355b64" stroke-width="5"/><polygon points="615,175 602,167 602,183" fill="#8f7cff"/>
+<g transform="translate(615 120)"><rect width="220" height="110" rx="18" fill="#14162e" stroke="#8f7cff" stroke-width="2"/><text x="24" y="38" fill="#a78bfa" font-size="15" font-weight="700">3 · GENERATE</text><text x="24" y="66" fill="#fbf9ff" font-size="16">OpenAI Responses API</text><text x="24" y="91" fill="#b7b0c9" font-size="12">configurable model</text></g>
+<path d="M835 175H900" stroke="#355b64" stroke-width="5"/><polygon points="900,175 887,167 887,183" fill="#63f5cf"/>
+<g transform="translate(900 120)"><rect width="150" height="110" rx="18" fill="#102027" stroke="#63f5cf" stroke-width="2"/><text x="20" y="38" fill="#63f5cf" font-size="15" font-weight="700">4 · AUDIT</text><text x="20" y="66" fill="#edfdf9" font-size="15">AiAuditLog</text><text x="20" y="91" fill="#9db8be" font-size="12">hash + timing + status</text></g>
+</g>
+</svg>
