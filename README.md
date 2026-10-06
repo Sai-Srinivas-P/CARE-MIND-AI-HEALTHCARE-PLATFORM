@@ -1,94 +1,453 @@
-# CARE-MIND-AI-HEALTHCARE-PLATFORM
+<p align="center">
+  <img src="assets/care-mind-hero.svg" alt="Care-Mind AI Healthcare Platform hero graphic" width="100%" />
+</p>
 
-Portfolio-grade healthcare management API built with ASP.NET Core and C#.
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-10.0-0b1720?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 10" />
+  <img src="https://img.shields.io/badge/ASP.NET%20Core-Web%20API-0b1720?style=for-the-badge&logo=dotnet&logoColor=white" alt="ASP.NET Core" />
+  <img src="https://img.shields.io/badge/C%23-Backend-0b1720?style=for-the-badge&logo=csharp&logoColor=white" alt="C#" />
+  <img src="https://img.shields.io/badge/EF%20Core-10-0b1720?style=for-the-badge" alt="Entity Framework Core 10" />
+  <img src="https://img.shields.io/badge/SQL%20Server-2022-0b1720?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022" />
+  <img src="https://img.shields.io/badge/OpenAI-Responses%20API-0b1720?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Responses API" />
+  <img src="https://img.shields.io/badge/MIT-License-0b1720?style=for-the-badge" alt="MIT License" />
+</p>
 
-> Educational project only. The AI assistant is not a doctor, does not diagnose, prescribe, or replace professional medical care.
+<h1 align="center">🩺 Care-Mind AI Healthcare Platform</h1>
 
-## Stack
-- .NET 10 / ASP.NET Core Web API
-- C#
-- Entity Framework Core 10
-- SQL Server
-- JWT bearer authentication
-- OpenAPI
-- Official OpenAI .NET SDK
-- xUnit
-- Docker Compose
+<p align="center">
+  A portfolio-grade <strong>ASP.NET Core healthcare management API</strong> combining role-aware workflows,
+  appointment and patient data, SQL Server persistence, and a guarded AI information assistant.
+</p>
 
-## Features
-- Patient registration and profiles
-- Doctor management
-- Appointment scheduling
-- Medical records and medications
-- Role-based authorization
-- AI healthcare information assistant
-- AI-generated patient visit-preparation summaries
-- AI audit logging
-- Safe AI fallback when no API key is configured
-- Global exception handling
-- Health checks
-- EF Core migrations
-- Seed/demo data
-- Unit/API tests
-- GitHub Actions CI
+> **Educational / demonstration project.** The AI component is not a doctor, does not diagnose, does not prescribe, and does not replace professional medical care.
 
-## Structure
+## ✦ What is actually implemented?
+
+This repository is a **.NET 10 Web API** organized into API, Domain, and Infrastructure layers. The current codebase includes:
+
+- JWT bearer authentication with **Admin / Doctor / Patient** roles.
+- Patient registration and profiles.
+- Doctor profiles.
+- Appointment creation, listing, authorization-aware filtering, and cancellation.
+- Medical records and medications in the domain model.
+- SQL Server persistence through **Entity Framework Core 10**.
+- Automatic database migration + demo seeding on startup.
+- OpenAI **Responses API** integration for health-information questions.
+- AI-generated patient visit-preparation summaries for Admin/Doctor users.
+- AI audit logging with request hashes, duration, success state, and feature metadata.
+- Safe fallback behavior when no OpenAI key is configured.
+- Global exception handling.
+- Health checks.
+- OpenAPI in development.
+- Docker Compose for SQL Server.
+- xUnit/API tests for health and password hashing.
+
+<p align="center">
+  <img src="assets/care-mind-ai-pulse.svg" alt="Care-Mind AI guarded request path" width="100%" />
+</p>
+
+## 🧭 Core workflow
+
 ```text
-src/
-  AIHealthCare.Api/
-  AIHealthCare.Domain/
-  AIHealthCare.Infrastructure/
-tests/
-  AIHealthCare.Api.Tests/
+             ┌──────────────┐
+             │  Authenticate│
+             │    /login    │
+             └──────┬───────┘
+                    │ JWT
+                    ▼
+        ┌─────────────────────────┐
+        │   Role-aware API access │
+        └───────┬────────┬────────┘
+                │        │
+        ┌───────▼───┐ ┌──▼──────────┐
+        │  Patient   │ │   Doctor   │
+        │ workflows  │ │ workflows  │
+        └──────┬─────┘ └──────┬──────┘
+               │              │
+               └──────┬───────┘
+                      ▼
+              ┌───────────────┐
+              │ Appointments  │
+              │ Records       │
+              │ Medications   │
+              └───────┬───────┘
+                      │
+          ┌───────────┴───────────┐
+          ▼                       ▼
+   ┌───────────────┐      ┌────────────────┐
+   │ SQL Server    │      │ AI Assistant   │
+   │ + EF Core     │      │ OpenAI API     │
+   └───────────────┘      └───────┬────────┘
+                                  │
+                                  ▼
+                           ┌──────────────┐
+                           │ AI audit log │
+                           └──────────────┘
 ```
 
-## Run
+## 🏗️ Architecture
 
-1. Install .NET 10 SDK and Docker Desktop.
-2. Start SQL Server:
+<p align="center">
+  <img src="assets/care-mind-architecture.svg" alt="Care-Mind service architecture" width="100%" />
+</p>
+
+### Solution layers
+
+| Layer | Responsibility |
+|---|---|
+| `AIHealthCare.Api` | Controllers, authentication, middleware, OpenAPI, health checks |
+| `AIHealthCare.Domain` | Entities and enums used by the business model |
+| `AIHealthCare.Infrastructure` | EF Core, SQL Server, seeding, OpenAI integration |
+| `AIHealthCare.Api.Tests` | API/context and password-hashing tests |
+
+The design is intentionally close to a clean architecture split, with the API depending on Domain and Infrastructure while domain entities remain free of ASP.NET-specific concerns.
+
+## 👥 Role model
+
+| Role | Current access pattern |
+|---|---|
+| **Admin** | Broad management access |
+| **Doctor** | Appointment creation and patient-summary AI workflow |
+| **Patient** | Patient-facing appointment access filtered to the current user |
+| **Unauthenticated** | Login + health endpoint |
+
+The appointment controller uses the authenticated user's **role + user ID** to filter returned appointments for patients and doctors.
+
+## 📅 Appointment workflow
+
+| Endpoint | Method | Purpose |
+|---|---:|---|
+| `/api/auth/login` | POST | Validate credentials and issue JWT |
+| `/api/health` | GET | Anonymous health response |
+| `/api/appointments` | GET | List appointments with role-aware filtering |
+| `/api/appointments` | POST | Create an appointment, Admin/Doctor only |
+| `/api/appointments/{id}/cancel` | PATCH | Cancel an appointment when authorized |
+| `/api/ai/ask` | POST | Ask the guarded AI assistant |
+| `/api/ai/patients/{patientId}/summary` | POST | Generate a visit-preparation summary, Admin/Doctor only |
+
+## 🤖 AI layer
+
+The AI integration is deliberately narrower than a generic chatbot.
+
+### `/api/ai/ask`
+
+The application:
+
+1. requires authentication;
+2. rejects empty or oversized questions;
+3. applies a healthcare safety system prompt;
+4. calls the OpenAI Responses API when configured;
+5. falls back safely when an API key is absent;
+6. writes an `AiAuditLog` entry.
+
+The configured model defaults to `gpt-5.2`, but the implementation reads `OpenAI:Model` from configuration.
+
+### Patient visit summaries
+
+Admins and doctors can request a patient summary built from structured application data:
+
+```text
+Patient
+ ├── Medical records
+ └── Active medications
+          │
+          ▼
+   structured prompt
+          │
+          ▼
+   OpenAI Responses API
+          │
+          ▼
+Known information
+Recent records
+Current medications
+Questions to discuss with a clinician
+```
+
+The AI service explicitly instructs the model not to diagnose, infer missing conditions, recommend medication changes, or invent facts.
+
+## 🔐 AI audit trail
+
+Every AI request creates an audit record containing:
+
+- authenticated user ID when available;
+- feature name;
+- SHA-256 hash of the request identifier;
+- response status summary;
+- elapsed duration in milliseconds;
+- success/failure state;
+- creation timestamp.
+
+That gives the platform an observable AI trail without storing the raw user question in the audit row.
+
+## 🗃️ Domain model
+
+```text
+AppUser
+  ├── Patient
+  └── Doctor
+
+Patient
+  ├── Appointments
+  ├── MedicalRecords
+  └── Medications
+
+Doctor
+  ├── Appointments
+  └── MedicalRecords
+
+Appointment
+  ├── Patient
+  └── Doctor
+
+AiAuditLog
+  └── optional AppUser
+```
+
+Core entities:
+
+`AppUser` · `Patient` · `Doctor` · `Appointment` · `MedicalRecord` · `Medication` · `AiAuditLog`
+
+## 🛠️ Technology stack
+
+### Backend
+
+- .NET 10
+- ASP.NET Core Web API
+- C#
+- Entity Framework Core 10
+- SQL Server 2022
+- JWT Bearer Authentication
+- OpenAPI
+- Docker Compose
+- xUnit v3
+
+### AI
+
+- Official OpenAI .NET SDK
+- OpenAI Responses API
+- Configurable model
+- Safety-oriented system prompt
+- Fallback mode without API credentials
+- AI request audit logging
+
+### Infrastructure
+
+- EF Core migrations
+- Startup database migration
+- Demo data seeding
+- Global exception middleware
+- Health checks
+- Central package management
+
+## 📁 Repository structure
+
+```text
+CARE-MIND-AI-HEALTHCARE-PLATFORM/
+├── AIHealthCareManagementSystem.slnx
+├── Directory.Build.props
+├── Directory.Packages.props
+├── global.json
+├── nuget.config
+├── docker-compose.yml
+├── LICENSE
+├── README.md
+│
+├── assets/
+│   ├── care-mind-hero.svg
+│   ├── care-mind-architecture.svg
+│   └── care-mind-ai-pulse.svg
+│
+├── src/
+│   ├── AIHealthCare.Api/
+│   │   ├── Controllers/
+│   │   ├── Contracts/
+│   │   ├── Middleware/
+│   │   ├── Services/
+│   │   ├── Program.cs
+│   │   └── appsettings*.json
+│   │
+│   ├── AIHealthCare.Domain/
+│   │   ├── Entities/
+│   │   └── Enums/
+│   │
+│   └── AIHealthCare.Infrastructure/
+│       ├── Configurations/
+│       ├── Data/
+│       └── Services/
+│
+└── tests/
+    └── AIHealthCare.Api.Tests/
+```
+
+## 🚀 Run locally
+
+### Prerequisites
+
+- .NET SDK **10.0.100** or a compatible 10.0 feature release
+- Docker Desktop
+- Git
+
+### 1. Clone
+
+```bash
+git clone https://github.com/Sai-Srinivas-P/CARE-MIND-AI-HEALTHCARE-PLATFORM.git
+cd CARE-MIND-AI-HEALTHCARE-PLATFORM
+```
+
+### 2. Start SQL Server
 
 ```bash
 docker compose up -d sqlserver
 ```
 
-3. Set your OpenAI key without committing it:
+The Compose file exposes SQL Server on port `1433`.
+
+### 3. Configure secrets
+
+Do **not** put production secrets in source control.
 
 PowerShell:
+
 ```powershell
 $env:OpenAI__ApiKey="your-api-key"
 ```
 
-Optional:
+Optional model:
+
 ```powershell
 $env:OpenAI__Model="gpt-5.2"
 ```
 
-4. Run:
+The repository contains development/demo credentials and a development JWT key for local use. Replace them before any real deployment.
+
+### 4. Restore and run
 
 ```bash
 dotnet restore
 dotnet run --project src/AIHealthCare.Api
 ```
 
-OpenAPI JSON:
-`https://localhost:7001/openapi/v1.json`
+In development, OpenAPI is exposed at:
 
-## Demo login
+```text
+https://localhost:7001/openapi/v1.json
+```
 
-All seeded demo accounts use the configured `Seed:DemoPassword`.
+Health endpoint:
 
-- admin@aihealthcare.local
-- doctor@aihealthcare.local
-- patient@aihealthcare.local
+```text
+https://localhost:7001/api/health
+```
 
-Default development password:
-`ChangeMe123!`
+## 🔑 Demo accounts
+
+The seeder creates:
+
+```text
+admin@aihealthcare.local
+doctor@aihealthcare.local
+patient@aihealthcare.local
+```
+
+All three use the configured `Seed:DemoPassword`.
+
+Default development value:
+
+```text
+ChangeMe123!
+```
 
 Change it before any real deployment.
 
-## API examples
+## 🧪 Tests
+
+Run:
+
+```bash
+dotnet test
+```
+
+Current tests cover:
+
+- API health endpoint success.
+- Password hashing / verification round-trip.
+
+This is a baseline, not a complete healthcare application test suite.
+
+High-value future tests include appointment authorization matrices, access-boundary tests, cancellation rules, AI fallback behavior, AI audit logging, database integration tests, concurrency tests, and security testing.
+
+## 🗄️ Database + migrations
+
+The application uses SQL Server through EF Core and calls `Database.MigrateAsync()` during startup before seeding demo data.
+
+Manual migration workflow:
+
+```bash
+dotnet tool install --global dotnet-ef
+
+dotnet ef migrations add InitialCreate \
+  --project src/AIHealthCare.Infrastructure \
+  --startup-project src/AIHealthCare.Api \
+  --output-dir Data/Migrations
+
+dotnet ef database update \
+  --project src/AIHealthCare.Infrastructure \
+  --startup-project src/AIHealthCare.Api
+```
+
+## ⚠️ Security and healthcare boundaries
+
+This repository is **not a production-ready clinical system**.
+
+The current source contains explicit development/demo choices:
+
+- a default SQL Server password in configuration/Compose;
+- a development JWT signing key in configuration;
+- a default demo password;
+- no external identity provider or refresh-token rotation;
+- no complete healthcare privacy/compliance implementation;
+- no clinical safety certification/evaluation for the AI;
+- no rate limiting;
+- no full BOLA/IDOR threat model;
+- no production-grade secret vault integration.
+
+The correct interpretation is **portfolio / educational healthcare API architecture**, not a deployable medical platform.
+
+## 🛡️ Production hardening roadmap
+
+```text
+Current demo API
+      │
+      ▼
+External identity + MFA
+      │
+      ▼
+Secret vault + key rotation
+      │
+      ▼
+Encryption + key management
+      │
+      ▼
+Fine-grained authorization / BOLA defenses
+      │
+      ▼
+Audit + consent + retention controls
+      │
+      ▼
+Security testing + threat modeling
+      │
+      ▼
+AI evaluation + prompt-injection defenses
+      │
+      ▼
+Jurisdiction-specific healthcare compliance
+```
+
+## 💬 Example requests
 
 ### Login
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -99,7 +458,8 @@ Content-Type: application/json
 }
 ```
 
-### Ask AI
+### Ask the AI assistant
+
 ```http
 POST /api/ai/ask
 Authorization: Bearer <token>
@@ -110,7 +470,8 @@ Content-Type: application/json
 }
 ```
 
-### Create appointment
+### Create an appointment
+
 ```http
 POST /api/appointments
 Authorization: Bearer <token>
@@ -124,48 +485,25 @@ Content-Type: application/json
 }
 ```
 
-## EF Core migrations
+## 🎯 Why this project is interesting
 
-```bash
-dotnet tool install --global dotnet-ef
-dotnet ef migrations add InitialCreate --project src/AIHealthCare.Infrastructure --startup-project src/AIHealthCare.Api --output-dir Data/Migrations
-dotnet ef database update --project src/AIHealthCare.Infrastructure --startup-project src/AIHealthCare.Api
-```
+The value is not just “AI + healthcare” as a label. The implementation ties together:
 
-## Architecture
+**JWT → role-aware authorization → EF Core domain model → SQL Server → seeded workflows → OpenAI Responses API → AI audit logging → health checks → Docker → tests**
 
-```text
-Client
-  |
-  v
-ASP.NET Core API
-  |
-  +-- Controllers / DTOs
-  |
-  +-- Services
-  |
-  +-- Domain
-  |
-  +-- Infrastructure
-       +-- EF Core / SQL Server
-       +-- OpenAI Responses API
-```
+That makes it a useful portfolio project for demonstrating modern .NET API engineering while keeping the AI component behind explicit safety boundaries.
 
-## Production hardening checklist
-- ASP.NET Core Identity or an external identity provider
-- Refresh tokens and token rotation
-- Secret storage such as a managed secret vault
-- Encryption at rest and in transit
-- Strong audit trails and access reviews
-- Consent and data-retention controls
-- BOLA/IDOR threat modeling
-- Rate limiting
-- Structured logging and tracing
-- Redis caching where appropriate
-- Background jobs for notifications
-- Optimistic concurrency
-- Healthcare/privacy compliance for the deployment jurisdiction
-- AI evaluation, prompt-injection defenses, and human oversight
+## 📜 License
 
-## Interview topics demonstrated
-Dependency injection, middleware, JWT, claims/roles, EF Core, LINQ, async/await, DTOs, REST APIs, OpenAPI, configuration, exception handling, testing, Docker, CI/CD, and AI integration.
+MIT License. See [`LICENSE`](LICENSE).
+
+## 👤 Author
+
+**Sai-Srinivas-P**  
+GitHub: https://github.com/Sai-Srinivas-P
+
+---
+
+<p align="center">
+  <strong>🫶 Build safer healthcare software. Keep the human clinician in the loop.</strong>
+</p>
