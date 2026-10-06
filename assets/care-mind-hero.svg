@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+<defs>
+<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#06161a"/><stop offset=".52" stop-color="#0a2a31"/><stop offset="1" stop-color="#0c1730"/></linearGradient>
+<linearGradient id="mint" x1="0" x2="1"><stop stop-color="#63f5cf"/><stop offset="1" stop-color="#63d7ff"/></linearGradient>
+<linearGradient id="violet" x1="0" x2="1"><stop stop-color="#8c7dff"/><stop offset="1" stop-color="#da78ff"/></linearGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1200" height="520" rx="28" fill="url(#bg)"/>
+<g opacity=".13" stroke="#93c5cf"><path d="M40 110H1160M40 180H1160M40 250H1160M40 320H1160M40 390H1160"/><path d="M120 40V470M240 40V470M360 40V470M480 40V470M600 40V470M720 40V470M840 40V470M960 40V470M1080 40V470"/></g>
+
+<text x="58" y="55" fill="#f3fffd" font-family="Arial,Helvetica,sans-serif" font-size="34" font-weight="700">CARE-MIND AI HEALTHCARE PLATFORM</text>
+<text x="60" y="87" fill="#a5c1c6" font-family="Arial,Helvetica,sans-serif" font-size="15">Secure healthcare-management API + clinician-aware AI assistance + auditable workflows</text>
+
+<!-- pulse -->
+<path d="M70 130H190l28-46 34 98 36-66 32 28h130" fill="none" stroke="url(#mint)" stroke-width="5" filter="url(#glow)">
+<animate attributeName="stroke-dasharray" values="0 720;200 520;720 0" dur="3.2s" repeatCount="indefinite"/>
+</path>
+<text x="70" y="176" fill="#63f5cf" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700">HEALTH SIGNAL → APPLICATION WORKFLOW</text>
+
+<!-- role cards -->
+<g transform="translate(60 220)" font-family="Arial,Helvetica,sans-serif">
+<rect width="300" height="105" rx="18" fill="#0b2027" stroke="#2d5e67"/>
+<circle cx="42" cy="50" r="24" fill="#123741" stroke="#63f5cf" stroke-width="2"/><text x="33" y="57" fill="#63f5cf" font-size="20">P</text>
+<text x="82" y="42" fill="#f1fffd" font-size="17" font-weight="700">Patient</text>
+<text x="82" y="67" fill="#9db8be" font-size="13">appointments • records • medications</text>
+<text x="82" y="88" fill="#63f5cf" font-size="12">JWT protected access</text>
+</g>
+<g transform="translate(390 220)" font-family="Arial,Helvetica,sans-serif">
+<rect width="300" height="105" rx="18" fill="#0c1d31" stroke="#3e5d83"/>
+<circle cx="42" cy="50" r="24" fill="#142943" stroke="#63d7ff" stroke-width="2"/><text x="33" y="57" fill="#63d7ff" font-size="20">D</text>
+<text x="82" y="42" fill="#f1f8ff" font-size="17" font-weight="700">Doctor</text>
+<text x="82" y="67" fill="#a3b6ca" font-size="13">appointments • patient context • summaries</text>
+<text x="82" y="88" fill="#63d7ff" font-size="12">role-aware authorization</text>
+</g>
+<g transform="translate(720 220)" font-family="Arial,Helvetica,sans-serif">
+<rect width="300" height="105" rx="18" fill="#171530" stroke="#5c5191"/>
+<circle cx="42" cy="50" r="24" fill="#282145" stroke="#a78bfa" stroke-width="2"/><text x="32" y="57" fill="#a78bfa" font-size="20">AI</text>
+<text x="82" y="42" fill="#f7f4ff" font-size="17" font-weight="700">AI Assistant</text>
+<text x="82" y="67" fill="#bbb2cd" font-size="13">education • preparation • guarded output</text>
+<text x="82" y="88" fill="#c5b6ff" font-size="12">audited requests</text>
+</g>
+
+<!-- animated data path -->
+<g transform="translate(60 365)">
+<text x="0" y="0" fill="#eafcf9" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700">CARE-MIND FLOW</text>
+<path d="M0 34H1060" stroke="#27424a" stroke-width="5"/>
+<circle cx="80" cy="34" r="7" fill="#63f5cf" filter="url(#glow)">
+<animate attributeName="cx" values="80;980;80" dur="5s" repeatCount="indefinite"/>
+</circle>
+<g font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#91adb3">
+<text x="0" y="61">AUTH</text><text x="210" y="61">API</text><text x="420" y="61">EF CORE</text><text x="635" y="61">SQL SERVER</text><text x="855" y="61">AI AUDIT</text>
+</g>
+</g>
+
+<rect x="60" y="438" width="1060" height="42" rx="12" fill="#0b2027" stroke="#2d5e67"/>
+<text x="82" y="464" fill="#ffce6a" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700">EDUCATIONAL / DEMO USE</text>
+<text x="250" y="464" fill="#b7c9cd" font-family="Arial,Helvetica,sans-serif" font-size="12">The AI assistant is not a doctor and does not diagnose, prescribe, or replace professional care.</text>
+</svg>
