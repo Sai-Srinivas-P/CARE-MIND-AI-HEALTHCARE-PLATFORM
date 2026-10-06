@@ -1,27 +1,27 @@
-<p align="center">
-  <img src="assets/care-mind-hero.svg" alt="Care-Mind AI Healthcare Platform hero graphic" width="100%" />
-</p>
+# CARE-MIND AI HEALTHCARE PLATFORM
 
-<p align="center">
-  <img src="https://img.shields.io/badge/.NET-10.0-0b1720?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 10" />
-  <img src="https://img.shields.io/badge/ASP.NET%20Core-Web%20API-0b1720?style=for-the-badge&logo=dotnet&logoColor=white" alt="ASP.NET Core" />
-  <img src="https://img.shields.io/badge/C%23-Backend-0b1720?style=for-the-badge&logo=csharp&logoColor=white" alt="C#" />
-  <img src="https://img.shields.io/badge/EF%20Core-10-0b1720?style=for-the-badge" alt="Entity Framework Core 10" />
-  <img src="https://img.shields.io/badge/SQL%20Server-2022-0b1720?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022" />
-  <img src="https://img.shields.io/badge/OpenAI-Responses%20API-0b1720?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Responses API" />
-  <img src="https://img.shields.io/badge/MIT-License-0b1720?style=for-the-badge" alt="MIT License" />
-</p>
+> ## 🩺 SAFETY DOSSIER
+> **.NET 10 · ASP.NET Core Web API · SQL Server · JWT · OpenAI Responses API**
+>
+> **Scope:** portfolio / educational software  
+> **Clinical use:** not appropriate
+>
+> The README intentionally puts the **safety boundary first**, before the feature tour.
 
-<h1 align="center">🩺 Care-Mind AI Healthcare Platform</h1>
+<img src="assets/care-mind-hero.svg" alt="Care-Mind healthcare platform overview" width="100%" />
 
-<p align="center">
-  A portfolio-grade <strong>ASP.NET Core healthcare management API</strong> combining role-aware workflows,
-  appointment and patient data, SQL Server persistence, and a guarded AI information assistant.
-</p>
+<table>
+<tr>
+<td><strong>IDENTITY</strong><br/>Admin · Doctor · Patient</td>
+<td><strong>CORE DATA</strong><br/>Appointments · Records · Medications</td>
+<td><strong>AI GUARDRAIL</strong><br/>Prompt boundary + audit log</td>
+<td><strong>OPS</strong><br/>Docker · Health checks · xUnit</td>
+</tr>
+</table>
 
-> **Educational / demonstration project.** The AI component is not a doctor, does not diagnose, does not prescribe, and does not replace professional medical care.
+---
 
-## ✦ What is actually implemented?
+## A · What is actually implemented?
 
 This repository is a **.NET 10 Web API** organized into API, Domain, and Infrastructure layers. The current codebase includes:
 
